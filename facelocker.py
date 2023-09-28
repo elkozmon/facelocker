@@ -37,7 +37,7 @@ def new_parser():
     parser.add_argument("-t", "--threshold", type=int, default=5, help="number of consecutive frames without match to lock the screen")
     parser.add_argument("-i", "--interval", type=int, default=1000, help="interval between frame captures in milliseconds")
     parser.add_argument("-d", "--device", type=str, default="/dev/video0", help="video device")
-    parser.add_argument("-b", "--backend", type=int, default=-1, help='''
+    parser.add_argument("-b", "--backend", type=int, default=0, help='''
             {:d}: OpenCV implementation + CPU,
             {:d}: CUDA + GPU (CUDA),
             {:d}: CUDA + GPU (CUDA FP16),

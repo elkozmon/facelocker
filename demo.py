@@ -28,7 +28,7 @@ def new_parser():
     parser.add_argument("--sface", type=str, default=os.path.join("models", "face_recognizer_fast.onnx"), help="sface model")
     parser.add_argument("--features", type=str, default="features", help="directory with face feature files")
     parser.add_argument("-d", "--device", type=str, default="/dev/video0", help="video device")
-    parser.add_argument("-b", "--backend", type=int, default=-1, help='''
+    parser.add_argument("-b", "--backend", type=int, default=0, help='''
             {:d}: OpenCV implementation + CPU,
             {:d}: CUDA + GPU (CUDA),
             {:d}: CUDA + GPU (CUDA FP16),
