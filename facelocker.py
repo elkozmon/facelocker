@@ -102,6 +102,7 @@ def main():
     frame_counter = Counter()
     loginctl = LoginCtl()
     sleep_time = args.interval / 1000
+    users_ignored = set()
 
     # Start loop
     logger.info("starting facelocker")
@@ -109,14 +110,15 @@ def main():
 
     while not stopped:
         # List unlocked sessions
-        unlocked_sessions = loginctl.list_unlocked_sessions()
+        unlocked_sessions = loginctl.list_unlocked_sessions(skip_users = users_ignored)
 
         # Remove sessions with users not present in feature set
         for session in unlocked_sessions:
             user_features = feature_loader.load(session.user)
 
             if len(user_features) == 0:
-                logger.warning(f"ignoring session \"{session.id}\" of user \"{session.user}\" (reason: user features missing)")
+                logger.warning(f"ignoring sessions of user \"{session.user}\" (reason: user features missing)")
+                users_ignored.add(session.user)
                 unlocked_sessions.remove(session)
 
         # Skip frame if no unlocked sessions

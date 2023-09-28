@@ -29,23 +29,8 @@ class LoginCtl:
     def __init__(self):
         pass
 
-    def list_user_sessions(self, user: str, unlocked_only: bool = False) -> list[Session]:
-        sessions = self._list_sessions()
-        user_sessions = []
-
-        for session in sessions:
-            if session.user != user:
-                continue
-
-            if unlocked_only and session.locked:
-                continue
-
-            user_sessions.append(session)
-
-        return user_sessions
-
-    def list_unlocked_sessions(self) -> list[Session]:
-        sessions = self._list_sessions()
+    def list_unlocked_sessions(self, skip_users: set[str] = set()) -> list[Session]:
+        sessions = self._list_sessions(skip_users)
         unlocked_sessions = []
 
         for session in sessions:
@@ -62,15 +47,19 @@ class LoginCtl:
     def lock_session(self, session: Session):
         subprocess.check_call(["loginctl", "lock-session", session.id])
 
-    def _list_sessions(self) -> list[Session]:
+    def _list_sessions(self, skip_users: set[str]) -> list[Session]:
         output = subprocess.check_output(["loginctl", "list-sessions", "--no-legend"]).decode("utf-8")
         lines = output.strip().split("\n")
         sessions = []
 
         for line in lines:
             fields = line.strip().split()
-            session_id = fields[0]
             session_user = fields[2]
+
+            if session_user in skip_users:
+                continue
+
+            session_id = fields[0]
             session_locked = self._is_session_locked(session_id)
 
             sessions.append(Session(session_id, session_user, session_locked))
