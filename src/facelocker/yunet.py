@@ -1,8 +1,18 @@
 import cv2
 from typing import List, Tuple
 
+
 class YuNet:
-    def __init__(self, model_path: str, input_size: List[int]=[320, 320], score_threshold: float=0.6, nms_threshold: float=0.3, top_k: int=5000, backend_id: int=0, target_id: int=0):
+    def __init__(
+        self,
+        model_path: str,
+        input_size: List[int] = [320, 320],
+        score_threshold: float = 0.6,
+        nms_threshold: float = 0.3,
+        top_k: int = 5000,
+        backend_id: int = 0,
+        target_id: int = 0,
+    ):
         self._model_path = model_path
         self._input_size = tuple(input_size)
         self._score_threshold = score_threshold
@@ -20,7 +30,8 @@ class YuNet:
             nms_threshold=self._nms_threshold,
             top_k=self._top_k,
             backend_id=self._backend_id,
-            target_id=self._target_id)
+            target_id=self._target_id,
+        )
 
     @property
     def name(self) -> str:
@@ -38,7 +49,8 @@ class YuNet:
             nms_threshold=self._nms_threshold,
             top_k=self._top_k,
             backend_id=self._backend_id,
-            target_id=self._target_id)
+            target_id=self._target_id,
+        )
 
     def set_input_size(self, input_size: List[int]):
         self._model.setInputSize(tuple(input_size))

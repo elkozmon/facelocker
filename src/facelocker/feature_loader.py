@@ -4,6 +4,7 @@ import os
 import sys
 from string import Template
 
+
 class FeatureLoader:
     def __init__(self, path):
         self._path_template = Template(path)
@@ -18,10 +19,9 @@ class FeatureLoader:
         self._user_features[user] = []
 
         # Evaluate path template
-        path = self._path_template.substitute({
-            "HOME": os.path.expanduser(f"~{user}"),
-            "USER": user
-        })
+        path = self._path_template.substitute(
+            {"HOME": os.path.expanduser(f"~{user}"), "USER": user}
+        )
 
         # Load features
         for file in glob.glob(os.path.join(path, "*.npy")):

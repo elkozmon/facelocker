@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 
+
 def group_by(fun: callable, items: list) -> dict:
     groups = {}
 
@@ -13,6 +14,7 @@ def group_by(fun: callable, items: list) -> dict:
         groups[key].append(item)
 
     return groups
+
 
 def convert_image_to_bgr(image: np.ndarray) -> np.ndarray:
     channels = 1 if len(image.shape) == 2 else image.shape[2]

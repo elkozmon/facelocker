@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+
 class Session:
     def __init__(self, id: str, user: str, locked: bool):
         self._id = id
@@ -12,18 +13,19 @@ class Session:
 
     def __repr__(self):
         return str(self)
-    
+
     @property
     def id(self) -> str:
         return self._id
-    
+
     @property
     def user(self) -> str:
         return self._user
-    
+
     @property
     def locked(self) -> bool:
         return self._locked
+
 
 class LoginCtl:
     def __init__(self):
@@ -42,13 +44,17 @@ class LoginCtl:
         return unlocked_sessions
 
     def lock_sessions(self, sessions: list[Session]):
-        subprocess.check_call(["loginctl", "lock-session"] + [session.id for session in sessions])
+        subprocess.check_call(
+            ["loginctl", "lock-session"] + [session.id for session in sessions]
+        )
 
     def lock_session(self, session: Session):
         subprocess.check_call(["loginctl", "lock-session", session.id])
 
     def _list_sessions(self, skip_users: set[str]) -> list[Session]:
-        output = subprocess.check_output(["loginctl", "list-sessions", "--no-legend"]).decode("utf-8")
+        output = subprocess.check_output(
+            ["loginctl", "list-sessions", "--no-legend"]
+        ).decode("utf-8")
         lines = output.strip().split("\n")
         sessions = []
 
@@ -67,7 +73,9 @@ class LoginCtl:
         return sessions
 
     def _is_session_locked(self, session_id: str) -> bool:
-        output = subprocess.check_output(["loginctl", "show-session", session_id]).decode("utf-8")
+        output = subprocess.check_output(
+            ["loginctl", "show-session", session_id]
+        ).decode("utf-8")
         lines = output.strip().split("\n")
 
         for line in lines:

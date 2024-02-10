@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=60", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "facelocker"
+dependencies = ["typer[all]~=0.9.0", "numpy~=1.26.0"]
+requires-python = ">=3.8"
+description = "Tiny opencv-powered python script that locks the systemd user session when the users face is not being recognized on camera"
+authors = [{ name = "Lubos Kozmon", email = "contact@elkozmon.com" }]
+maintainers = [{ name = "Lubos Kozmon", email = "contact@elkozmon.com" }]
+readme = "README.md"
+keywords = ["opencv", "systemd", "python"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+opencv = ["opencv-python~=4.8.0.76"]
+
+[project.scripts]
+facelocker = "facelocker.main:app"
+
+[project.urls]
+Homepage = "https://github.com/elkozmon/facelocker"
+Issues = "https://github.com/elkozmon/facelocker/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"*" = ["*.onnx"]
+
+[tool.setuptools_scm]
