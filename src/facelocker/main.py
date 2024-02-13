@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 import time
 import json
+import systemd_watchdog
 
 from typing import Optional
 from typing_extensions import Annotated
@@ -114,6 +115,16 @@ def run(
 
     if threshold < 1:
         sys.exit("threshold must be greater than zero")
+    
+    # Setup watchdog
+    wd = systemd_watchdog.watchdog()
+
+    if not wd.is_enabled:
+        state["logger"].info(f"watchdog not enabled")
+    else:
+        wd_usec = int(os.environ.get('WATCHDOG_USEC', 0)) / 1000
+        if interval >= wd_usec:
+            sys.exit("interval equal or longer than watchdog timeout")
 
     # Setup signals
     global stopped
@@ -151,6 +162,9 @@ def run(
 
     # Start loop
     state["logger"].info("starting facelocker")
+    wd.status("starting facelocker")
+    wd.ready()
+    wd.notify()
 
     while not stopped:
         # List unlocked sessions
@@ -174,6 +188,7 @@ def run(
             )
             frame_counter = Counter()
             time.sleep(sleep_time)
+            wd.notify()
             continue
 
         # Capture image
@@ -232,6 +247,9 @@ def run(
 
                 if not dry_run:
                     loginctl.lock_sessions(user_unlocked_sessions)
+
+        # Notify watchdog
+        wd.notify()
 
         # Sleep interval
         time.sleep(sleep_time)
